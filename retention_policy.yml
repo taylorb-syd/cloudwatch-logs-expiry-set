@@ -1,0 +1,80 @@
+Description: >
+    Template that deploys a Lambda Function that will run hourly to take log groups with no expiry and set them to expiry after RetentionTime
+Parameters:
+    RetentionTime:
+        Type: Number
+        Default: 365
+        AllowedValues:
+            - 1
+            - 3
+            - 5
+            - 7
+            - 14
+            - 30
+            - 60
+            - 90
+            - 120
+            - 150
+            - 180
+            - 365
+            - 400
+            - 545
+            - 731
+            - 1827
+            - 3653
+
+Resources:
+    RetentionLambdaExecutionRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - sts:AssumeRole
+                    Principal:
+                        Service:
+                          - lambda.amazonaws.com
+            Policies:
+              - PolicyName: "ChangeLogRentention"
+                PolicyDocument:
+                    Version: 2012-10-17
+                    Statement:
+                      - Action:
+                          - logs:DescribeLogGroups
+                          - logs:PutRetentionPolicy
+                        Effect: Allow
+                        Resource: "*"
+
+    RetentionLambdaFunction:
+        Type: AWS::Lambda::Function
+        Properties:
+            Runtime: python2.7
+            Code: lambda-function.zip
+            Description: Sets retention policy on log groups with none currently set
+            Handler: lambda-function.handler
+            MemorySize: 256
+            Timeout: 300
+            Role: !GetAtt RetentionLambdaExecutionRole.Arn
+            Environment:
+                Variables:
+                    RETENTION_POLICY: !Ref RetentionTime
+
+    RetentionEventsRule:
+        Type: AWS::Events::Rule
+        Properties:
+            ScheduleExpression: "rate(1 hour)"
+            Targets:
+              - Arn: !GetAtt RetentionLambdaFunction.Arn
+                Id: ExecutionRetentionLambda
+
+    RetentionEventsPermission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: lambda:InvokeFunction
+            FunctionName: !Ref RetentionLambdaFunction
+            Principal: events.amazonaws.com
+            SourceArn: !GetAtt RetentionEventsRule.Arn
+
+
