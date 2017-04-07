@@ -35,7 +35,7 @@ def describe_log_groups_for_region(region):
 def filter_no_retention_policy(logGroups):
     returnGroup = []
     for index, item in enumerate(logGroups):
-        if 'rententionInDays' not in item:
+        if 'retentionInDays' not in item:
             returnGroup.append(item)
     return returnGroup
 
