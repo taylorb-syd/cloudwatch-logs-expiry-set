@@ -43,6 +43,7 @@ def apply_retention_policy(region, logGroups, policy):
     if policy:
         print 'Checking Retention Policys for Region %s...' % region
         for logGroup in logGroups:
+            print ' >> Changing retention policy for %s to %d days.' % (logGroup['logGroupName'], policy)
             response = aws_log_clients[region].put_retention_policy(logGroupName=logGroup['logGroupName'],retentionInDays=policy)
 
 def handler(event, context):
