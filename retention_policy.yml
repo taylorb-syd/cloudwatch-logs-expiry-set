@@ -67,7 +67,7 @@ Resources:
     RetentionEventsRule:
         Type: AWS::Events::Rule
         Properties:
-            ScheduleExpression: "rate(1 hour)"
+            ScheduleExpression: "rate(1 day)"
             Targets:
               - Arn: !GetAtt RetentionLambdaFunction.Arn
                 Id: ExecutionRetentionLambda
