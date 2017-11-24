@@ -19,7 +19,7 @@ if RETENTION_POLICY is not None:
     if RETENTION_POLICY.isdigit() and int(RETENTION_POLICY) in rentention_policy_check:
         RETENTION_POLICY = int(RETENTION_POLICY)
     else:
-        print "WARNING: RETENTION_POLICY value is not a valid value, valid values are: %s" % str(rentention_policy_check)
+        print("WARNING: RETENTION_POLICY value is not a valid value, valid values are: %s" % str(rentention_policy_check))
         RETENTION_POLICY = None
 
 # Functions
@@ -41,9 +41,9 @@ def filter_no_retention_policy(logGroups):
 
 def apply_retention_policy(region, logGroups, policy):
     if policy:
-        print 'Checking Retention Policys for Region %s...' % region
+        print('Checking Retention Policys for Region %s...' % region)
         for logGroup in logGroups:
-            print ' >> Changing retention policy for %s to %d days.' % (logGroup['logGroupName'], policy)
+            print(' >> Changing retention policy for %s to %d days.' % (logGroup['logGroupName'], policy))
             response = aws_log_clients[region].put_retention_policy(logGroupName=logGroup['logGroupName'],retentionInDays=policy)
 
 def handler(event, context):
