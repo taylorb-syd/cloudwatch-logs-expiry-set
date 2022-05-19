@@ -53,7 +53,7 @@ Resources:
     RetentionLambdaFunction:
         Type: AWS::Lambda::Function
         Properties:
-            Runtime: python3.6
+            Runtime: python3.9
             Code: lambda-function.zip
             Description: Sets retention policy on log groups with none currently set
             Handler: lambda-function.handler

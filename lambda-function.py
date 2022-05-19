@@ -2,7 +2,7 @@ import boto3
 import os
 
 # Statics
-rentention_policy_check = (1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653)
+retention_policy_check = (1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653)
 default_retention_policy = 365
 
 # Environment Variables
@@ -16,10 +16,10 @@ for index, item in enumerate(aws_log_regions):
 
 # Input validation
 if RETENTION_POLICY is not None:
-    if RETENTION_POLICY.isdigit() and int(RETENTION_POLICY) in rentention_policy_check:
+    if RETENTION_POLICY.isdigit() and int(RETENTION_POLICY) in retention_policy_check:
         RETENTION_POLICY = int(RETENTION_POLICY)
     else:
-        print("WARNING: RETENTION_POLICY value is not a valid value, valid values are: %s" % str(rentention_policy_check))
+        print("WARNING: RETENTION_POLICY value is not a valid value, valid values are: %s" % str(retention_policy_check))
         RETENTION_POLICY = None
 
 # Functions
